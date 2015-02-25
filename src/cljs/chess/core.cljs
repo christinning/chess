@@ -2,7 +2,17 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]))
 
-(defonce app-state (atom {:text "Hello Chestnut!"}))
+(def initial-board
+  [[\r \n \b \q \k \b \n \r]
+   [\p \p \p \p \p \p \p \p]
+   [\. \. \. \. \. \. \. \.]
+   [\. \. \. \. \. \. \. \.]
+   [\. \. \. \. \. \. \. \.]
+   [\. \. \. \. \. \. \. \.]
+   [\P \P \P \P \P \P \P \P]
+   [\R \N \B \Q \K \B \N \R]])
+
+(defonce app-state (atom {:board initial-board}))
 
 (defn main []
   (om/root
