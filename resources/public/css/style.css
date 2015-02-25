@@ -1,3 +1,81 @@
+/* colours http://paletton.com/#uid=10O0u0kinkc9utMeooqmugsrDbw */
+
 h1 {
-  text-decoration: underline;
+    text-decoration: underline;
 }
+
+
+.board{
+    border: 1px solid black;
+    position: absolute;
+    background-color: #edd2a7;
+}
+
+.board div:nth-child(even) div.square:nth-child(odd),
+.board div:nth-child(odd) div.square:nth-child(even){
+    background-color: #c3a16b;
+}
+
+.square{
+    height: 45px;
+    width: 45px;
+    float:left;
+}
+
+.piece{
+    background: url("/images/pieces.svg") no-repeat;
+    backround-size: 45px 45px;
+    height:100%;
+    width: 100%;    
+}
+
+
+.white.king{
+    background-position: 0px 0px;
+}
+
+.white.queen{
+    background-position: -45px 0px;
+}
+
+.white.bishop{
+    background-position: -90px 0px;
+}
+
+.white.knight{
+    background-position: -135px 0px;
+}
+
+.white.rook{
+    background-position: -180px 0px;
+}
+
+.white.pawn{
+    background-position: -225px 0px;
+}
+
+
+.black.king{
+    background-position: 0 -45px;
+}
+
+.black.queen{
+    background-position: -45px -45px;
+}
+
+.black.bishop{
+    background-position: -90px -45px;
+}
+
+.black.knight{
+    background-position: -135px -45px;
+}
+
+.black.rook{
+    background-position: -180px -45px;
+}
+    
+.black.pawn{
+    background-position: -225px -45px;
+}
+
