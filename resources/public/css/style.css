@@ -10,7 +10,7 @@ h1 {
     position: absolute;
     background-color: #edd2a7;
     width: 360px;
-    height: 360px;
+    height: 358px;
 }
 
 .board div:nth-child(even) div.square:nth-child(odd),
