@@ -1,19 +1,24 @@
 (ns chess.core
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [clojure.string :refer [upper-case]]))
+            [clojure.string :refer [upper-case]]
+            [clojure.set :refer [map-invert]]))
+
+(def empty-sq nil)
+
+(def empty-rank (vec (replicate 8 empty-sq)))
 
 (def initial-board
   [[:r :n :b :q :k :b :n :r]
    [:p :p :p :p :p :p :p :p]
-   [:. :. :. :. :. :. :. :.]
-   [:. :. :. :. :. :. :. :.]
-   [:. :. :. :. :. :. :. :.]
-   [:. :. :. :. :. :. :. :.]
+   empty-rank
+   empty-rank
+   empty-rank
+   empty-rank
    [:P :P :P :P :P :P :P :P]
    [:R :N :B :Q :K :B :N :R]])
 
-(def empty-sq :.)
+
 
 (def pieces {:r "rook" :R "rook"
              :n "knight" :N "knight"
@@ -22,13 +27,14 @@
              :k "king" :K "king"
              :p "pawn" :P "pawn"})
 
-(def file->i
-  "Convert a letter file to an integer index (eg \"a\" -> 0)"
-  (let [m (into {}
-                (map-indexed
-                 (fn [i c] [c i])
-                 (seq "abcdefgh")))]
-    (fn [f] (get m (char f)))))
+(let [f-to-i (into {}
+              (map-indexed
+               (fn [i c] [c i])
+               (seq "abcdefgh")))
+      i-to-f (map-invert f-to-i)]
+  (do
+    (defn file->i [f] (get f-to-i (char f)))
+    (defn i->file [i] (get i-to-f i))))
 
 (defn parse-int
   [i]
@@ -41,13 +47,10 @@
   (let [[f r] (vec p)]
     [(- 8 (parse-int r)) (file->i f)]))
 
-(declare valid-piece?)
-
 (defn in
   "Get the contents of a square on the board. Nil if empty"
   [board sq]
-  (let [p (get-in board (to-board-ks sq))]
-    (if (valid-piece? p) p)))
+  (get-in board (to-board-ks sq)))
 
 (defn put
   "Puts a piece at a square in the board"
@@ -88,10 +91,10 @@
         om/IRender
         (render [_]
           (apply dom/div #js {:className "board"}
-                   (map
-                    (fn [r] (apply dom/div #js {:className "row"}
-                                   (map (fn [s] (dom/div #js {:className "square"}
-                                                         (if (valid-piece? s)
+                   (map-indexed
+                    (fn [i r] (apply dom/div #js {:className "row" :id (- 8 i)}
+                                   (map-indexed (fn [j s] (dom/div #js {:className "square" :id (str (i->file j) (- 8 i))}
+                                                         (if s
                                                            (dom/div #js {:className (str "piece " (colour s) " " (pieces s))} nil)))) r)))
                     (:board app))))))
     app-state
