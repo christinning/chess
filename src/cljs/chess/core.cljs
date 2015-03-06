@@ -47,6 +47,11 @@
   (let [[f r] (vec p)]
     [(- 8 (parse-int r)) (file->i f)]))
 
+(defn from-board-ks
+  "The complement of to-board-ks"
+  [x y]
+  (str (i->file x) (- 8 y)))
+
 (defn in
   "Get the contents of a square on the board. Nil if empty"
   [board sq]
@@ -92,8 +97,8 @@
         (render [_]
           (apply dom/div #js {:className "board"}
                    (map-indexed
-                    (fn [i r] (apply dom/div #js {:className "row" :id (- 8 i)}
-                                   (map-indexed (fn [j s] (dom/div #js {:className "square" :id (str (i->file j) (- 8 i))}
+                    (fn [i r] (apply dom/div #js {:className "row"}
+                                   (map-indexed (fn [j s] (dom/div #js {:className "square" :id (from-board-ks j i)}
                                                          (if s
                                                            (dom/div #js {:className (str "piece " (colour s) " " (pieces s))} nil)))) r)))
                     (:board app))))))
