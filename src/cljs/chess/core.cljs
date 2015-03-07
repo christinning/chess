@@ -5,11 +5,16 @@
 
 (defonce app-state (atom {:board board/start-position}))
 
+
+(defn piece-class-name
+  [p]
+  (str "piece " (board/colour p) " " (board/pieces p)))
+
 (defn piece [p owner]
   (reify
     om/IRender
     (render [_]
-      (dom/div #js {:className (str "piece " (board/colour p) " " (board/pieces p))} nil))))
+      (dom/div #js {:className (piece-class-name p)} nil))))
 
 (defn main []
   (om/root
