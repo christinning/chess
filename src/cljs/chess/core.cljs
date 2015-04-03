@@ -18,26 +18,28 @@
     (render [_]
       (dom/div #js {:className (piece-class-name p)} nil))))
 
-(defn square [s owner {:keys [rank file on-click]}]
+(defn square [[id p] owner {:keys [on-click]}]
   (reify
     om/IRender
     (render [_]
       (dom/div
-       #js {:className "square" :id (board/from-board-ks file rank)}
-       (if s
-         (om/build piece s))))))
+       #js {:className "square" :id id}
+       (if p
+         (om/build piece p))))))
 
 (defn main []
   (om/root
-    (fn [app owner]
+    (fn [{:keys [board]} owner]
       (reify
         om/IRender
         (render [_]
           (apply dom/div #js {:className "board"}
-                   (map-indexed
-                    (fn [rank r] (apply dom/div #js {:className "row"}
-                                   (map-indexed (fn [file s] (om/build square s {:opts {:rank rank :file file}})) r)))
-                    (:board app))))))
+                 (map
+                  (fn
+                    [r]
+                    (apply dom/div #js {:className "row"}
+                           (om/build-all square r)))
+                  (board/rows-of-squares-and-pieces board))))))
     app-state
     {:target (. js/document (getElementById "app"))}))
 
