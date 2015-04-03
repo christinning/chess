@@ -52,8 +52,14 @@
          om/IDidMount
          (did-mount [_]
            (go (while true
-                 (let [new-selection (<! click-chan)]
-                   (om/set-state! owner :selected new-selection)))))))
+                 (let [new-selection (<! click-chan)
+                       old-selection (om/get-state owner :selected)]
+                   (if old-selection
+                     (do
+                       (om/transact! app-state :board (fn [b] (board/move b old-selection new-selection)))
+                       (om/set-state! owner :selected nil))
+                     (if (board/in (deref board) new-selection)
+                       (om/set-state! owner :selected new-selection)))))))))
      app-state
      {:target (. js/document (getElementById "app"))})))
 
