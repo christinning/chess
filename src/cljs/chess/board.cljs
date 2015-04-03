@@ -83,7 +83,8 @@
   (if-let [p (in board from-sq)]
     (-> board
         (put to-sq p)
-        (put from-sq empty-sq))))
+        (put from-sq empty-sq))
+    board))
 
 (defn valid-piece?
   [p]
