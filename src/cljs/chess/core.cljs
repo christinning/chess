@@ -7,7 +7,7 @@
 
 
 
-(defonce app-state (atom {:board board/start-position :selected "a1"}))
+(defonce app-state (atom {:board board/start-position}))
 
 
 (defn piece-class-name
@@ -36,23 +36,24 @@
     (om/root
      (fn [{:keys [board selected] :as app-state} owner]
        (reify
-         om/IRender
-         (render [_]
-           (apply dom/div #js {:className "board"}
-                  (map
-                   (fn
-                     [r]
-                     (apply dom/div #js {:className "row"}
-                            (om/build-all square r {:opts {:click-chan click-chan}})))
-                   (->> board
-                        board/squares-and-pieces
-                        (map (fn [[s p]] [s p (= s selected)]))
-                        board/in-rows))))
+         om/IRenderState
+         (render-state [this state]
+           (let [selected (state :selected)]             
+             (apply dom/div #js {:className "board"}
+                    (map
+                     (fn
+                       [r]
+                       (apply dom/div #js {:className "row"}
+                              (om/build-all square r {:opts {:click-chan click-chan}})))
+                     (->> board
+                          board/squares-and-pieces
+                          (map (fn [[s p]] [s p (= s selected)]))
+                          board/in-rows)))))
          om/IDidMount
          (did-mount [_]
            (go (while true
                  (let [new-selection (<! click-chan)]
-                   (om/transact! app-state :selected (fn [_] new-selection))))))))
+                   (om/set-state! owner :selected new-selection)))))))
      app-state
      {:target (. js/document (getElementById "app"))})))
 
