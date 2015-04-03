@@ -52,16 +52,20 @@
   [x y]
   (str (i->file x) (- 8 y)))
 
-(defn rows-of-squares-and-pieces
+(defn squares-and-pieces
   "Get board rows from top to bottom. Returns a seq of seqs 
   each containing a vector of [square-name piece]. 
   Eg. [\"a2\" :p] or [\"a3\" nil]"
   [board]
-  (partition 8
-             (for
-                 [r (range 8)
-                  f (range 8)]
-               [(from-board-ks f r) (get-in board [r f])])))
+  (for
+      [r (range 8)
+       f (range 8)]
+    [(from-board-ks f r) (get-in board [r f])]))
+
+(defn in-rows
+  "Converts a sequence of all squares into a sequence of rows."
+  [board-seq]
+  (partition 8 board-seq))
 
 (defn in
   "Get the contents of a square on the board. Nil if empty"

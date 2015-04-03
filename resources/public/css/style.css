@@ -24,6 +24,23 @@ h1 {
     float:left;
 }
 
+.square.selected{
+    animation: example 2s ease 0s infinite;
+    -webkit-animation: example 2s ease 0s infinite;
+}
+
+keyframes example{
+    0%  {background-color: yellow;}
+    50% {background-color: green;}
+    100% {background-color: yellow;}
+}
+
+@-webkit-keyframes example {
+    0%  {background-color: yellow;}
+    50% {background-color: green;}
+    100% {background-color: yellow;}
+}
+
 .piece{
     background: url("/images/pieces.svg") no-repeat;
     backround-size: 45px 45px;
