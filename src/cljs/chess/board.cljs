@@ -62,7 +62,7 @@
        f (range 8)]
     [(from-board-ks f r) (get-in board [r f])]))
 
-(defn in-rows
+(defn as-rows
   "Converts a sequence of all squares into a sequence of rows."
   [board-seq]
   (partition 8 board-seq))
