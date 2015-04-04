@@ -86,6 +86,7 @@
         (put from-sq empty-sq))
     board))
 
+
 (defn valid-piece?
   [p]
   (pieces p))
