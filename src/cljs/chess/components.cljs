@@ -2,13 +2,13 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [chess.board :as board]
+            [chess.board :as b]
             [cljs.core.async :refer [chan <! put!]]))
 
 
 (defn piece-class-name
   [p]
-  (str "piece " (board/colour p) " " (board/pieces p)))
+  (str "piece " (b/colour p) " " (b/pieces p)))
 
 (defn piece [p owner]
   (reify
@@ -40,9 +40,9 @@
                     (apply dom/div #js {:className "row"}
                            (om/build-all square r {:opts {:click-chan click-chan}})))
                   (->> board
-                       board/squares-and-pieces
-                       (map (fn [[s _ :as v]] conj v (= s selected)))
-                       board/as-rows)))))
+                       b/squares-and-pieces
+                       (map (fn [[s p]] [s p (= s selected)]))
+                       b/as-rows)))))
       om/IDidMount
       (did-mount [_]
         (go (while true
@@ -51,9 +51,9 @@
                 (if old-selection
                   (do
                     (om/transact! app-state :board (fn [b]
-                                                     (board/move b
+                                                     (b/move b
                                                                  old-selection
                                                                  new-selection)))
                     (om/set-state! owner :selected nil))
-                  (if (board/in (deref board) new-selection)
+                  (if (b/in (deref board) new-selection)
                     (om/set-state! owner :selected new-selection))))))))))
