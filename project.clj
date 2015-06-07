@@ -16,7 +16,7 @@
                  [environ "1.0.0"]
                  [com.cemerick/piggieback "0.2.1"]
                  [org.clojure/tools.nrepl "0.2.10"]
-                 [weasel "0.6.0"]
+                 [weasel "0.7.0-SNAPSHOT"]
                  [leiningen "2.5.0"]]
 
   :plugins [[lein-cljsbuild "1.0.6"]
@@ -35,7 +35,10 @@
                                         :optimizations :none
                                         :pretty-print  true}}}}
 
-  :profiles {:dev {:dependencies [[org.clojure/tools.nrepl "0.2.10"]]
+  :profiles {:dev {:source-paths ["env/dev/clj"]
+                   :dependencies [[com.cemerick/piggieback "0.2.1"]
+                                  [org.clojure/tools.nrepl "0.2.10"]
+                                  [figwheel-sidecar "0.3.3"]]
 
                    :repl-options {:init-ns chess.server
                                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
