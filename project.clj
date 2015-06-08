@@ -18,30 +18,31 @@
                       [lein-figwheel "0.3.3"]
                       [lein-environ "1.0.0"]]
 
-            :source-paths ["src" "src/cljs"]
+            :source-paths ["src/clj" "src/cljs"]
 
             :clean-targets ^{:protect false} ["resources/public/js/" "target"]
 
-            :cljsbuild {
-                        :builds [{:id "dev"
-                                  :source-paths ["src/cljs"]
+            :profiles {:dev {
+                             :source-paths ["env/dev/clj"]
+                             :env       {:is-dev true}
+                             :cljsbuild {
+                                         :builds {:app
+                                                  {:source-paths ["src/cljs"]
 
-                                  :figwheel { :on-jsload "chess.core/on-js-reload" }
+                                                   :figwheel     {:on-jsload "chess.core/on-js-reload"}
 
-                                  :compiler {:main chess.core
-                                             :asset-path "js/"
-                                             :output-to "resources/public/js/app.js"
-                                             :output-dir "resources/public/js/"
-                                             :source-map-timestamp true }}
-                                 {:id "min"
-                                  :source-paths ["src/cljs"]
-                                  :compiler {:output-to "resources/public/js/app.js"
-                                             :main chess.core
-                                             :optimizations :advanced
-                                             :pretty-print false}}]}
+                                                   :compiler     {:main                 chess.core
+                                                                  :asset-path           "js/"
+                                                                  :output-to            "resources/public/js/app.js"
+                                                                  :output-dir           "resources/public/js/"
+                                                                  :source-map-timestamp true}}}}
+                             }
+
+                       }
+
 
             :figwheel {
-                       :http-server-root "" ;; default and assumes "resources"
+                       :http-server-root "public" ;; default and assumes "resources"
                        :server-port 10555 ;; default
                        :css-dirs ["resources/public/css"] ;; watch and update CSS
 
@@ -52,7 +53,7 @@
                        ;; if you want to embed a ring handler into the figwheel http-kit
                        ;; server, this is for simple ring servers, if this
                        ;; doesn't work for you just run your own server :)
-                       ;; :ring-handler hello_world.server/handler
+                       :ring-handler chess.server/http-handler
 
                        ;; To be able to open files in your editor from the heads up display
                        ;; you will need to put a script on your path.
