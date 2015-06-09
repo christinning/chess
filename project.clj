@@ -22,20 +22,21 @@
 
             :clean-targets ^{:protect false} ["resources/public/js/" "target"]
 
+            :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
+                                       :compiler {:output-to     "resources/public/js/app.js"
+                                                  :output-dir    "resources/public/js/out"
+                                                  :source-map    "resources/public/js/out.js.map"
+                                                  :preamble      ["react/react.min.js"]
+                                                  :externs       ["react/externs/react.js"]
+                                                  :optimizations :none
+                                                  :pretty-print  true}}}}
+
             :profiles {:dev {
                              :source-paths ["env/dev/clj"]
                              :env       {:is-dev true}
                              :cljsbuild {
                                          :builds {:app
-                                                  {:source-paths ["src/cljs"]
-
-                                                   :figwheel     {:on-jsload "chess.core/on-js-reload"}
-
-                                                   :compiler     {:main                 chess.core
-                                                                  :asset-path           "js/"
-                                                                  :output-to            "resources/public/js/app.js"
-                                                                  :output-dir           "resources/public/js/"
-                                                                  :source-map-timestamp true}}}}
+                                                  {:source-paths ["env/dev/cljs"]}}}
                              }
 
                        }
