@@ -1,8 +1,6 @@
 (ns chess.dev
   (:require [environ.core :refer [env]]
             [net.cgrand.enlive-html :refer [set-attr prepend append html]]
-            [cemerick.piggieback :as piggieback]
-            [weasel.repl.websocket :as weasel]
             [figwheel-sidecar.auto-builder :as fig-auto]
             [figwheel-sidecar.core :as fig]))
 
@@ -11,13 +9,11 @@
 (def inject-devmode-html
   (comp
      (set-attr :class "is-dev")
-     (prepend (html [:script {:type "text/javascript" :src "/js/out/goog/base.js"}]))
+     (prepend (html [:script {:type "text/javascript" :src "/js/goog/base.js"}]))
      (prepend (html [:script {:type "text/javascript" :src "/react/react.js"}]))
-     (append  (html [:script {:type "text/javascript"} "goog.require('chess.dev')"]))))
+     ;;(append  (html [:script {:type "text/javascript"} "goog.require('chess.dev')"]))
+     ))
 
-(defn browser-repl []
-  (piggieback/cljs-repl
-    (weasel/repl-env :ip "0.0.0.0" :port 9001 )))
 
 (defn start-figwheel []
   (let [server (fig/start-server { :css-dirs ["resources/public/css"]})
