@@ -1,4 +1,4 @@
-(ns ^:figwheel-always chess.core
+(ns chess.core
   (:require [om.core :as om :include-macros true]
             [chess.board :as board]
             [chess.components :as components]))

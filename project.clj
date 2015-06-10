@@ -33,10 +33,11 @@
 
             :profiles {:dev {
                              :source-paths ["env/dev/clj"]
-                             :env       {:is-dev true}
-                             :cljsbuild {
-                                         :builds {:app
-                                                  {:source-paths ["env/dev/cljs"]}}}
+                             :env          {:is-dev true}
+                             :cljsbuild    {
+                                            :builds {:app
+                                                     {:figwheel true
+                                                      :source-paths ["env/dev/cljs"]}}}
                              }
 
                        }
