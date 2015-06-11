@@ -14,7 +14,10 @@
   (reify
     om/IRender
     (render [_]
-      (dom/div #js {:className (piece-class-name p)} nil))))
+      (dom/div #js {:className (piece-class-name p)} nil))
+    om/IDisplayName
+    (display-name [_]
+      "piece")))
 
 (defn square [[id p selected] owner {:keys [click-chan]}]
   (reify
@@ -25,7 +28,10 @@
             :id        id
             :onClick   #(put! click-chan id)}
        (if p
-         (om/build piece p))))))
+         (om/build piece p))))
+    om/IDisplayName
+    (display-name [_]
+      "square")))
 
 (defn board [{:keys [board] :as app-state} owner]
   (reify
@@ -59,4 +65,7 @@
                 (om/set-state! owner :selected nil))
               (if (b/in (deref board) new-selection)
                 (om/set-state! owner :selected new-selection))))
-          (recur))))))
+          (recur))))
+    om/IDisplayName
+    (display-name [_]
+      "board")))
