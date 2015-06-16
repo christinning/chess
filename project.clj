@@ -20,7 +20,7 @@
 
             :source-paths ["src/clj" "src/cljs"]
 
-            :clean-targets ^{:protect false} ["resources/public/js/" "target"]
+            :clean-targets ^{:protect false} ["resources/public/js/" "resources/private" "target"]
 
             :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                                        :compiler {:output-to     "resources/public/js/app.js"
@@ -34,12 +34,27 @@
             :profiles {:dev {
                              :source-paths ["env/dev/clj"]
                              :env          {:is-dev true}
+                             :plugins [[com.cemerick/clojurescript.test "0.3.1"]
+                                       [lein-npm "0.4.0"]]
                              :cljsbuild    {
+                                            :test-commands {"unit-tests" ["node_modules/slimerjs/bin/slimerjs" :runner
+                                                                          "resources/private/js/unit-test.js"
+                                                                          ]}
                                             :builds {:app
                                                      {:figwheel true
-                                                      :source-paths ["env/dev/cljs"]}}}
-                             }
+                                                      :source-paths ["env/dev/cljs"]}
+                                                     :tests
+                                                     {
 
+                                                       :source-paths ["src/cljs" "test/cljs"]
+                                                       :compiler {:pretty-print true
+                                                                  :output-dir "resources/private/js"
+                                                                  :output-to "resources/private/js/unit-test.js"
+                                                                  :preamble ["react/react.js"]
+                                                                  :externs ["react/externs/react.js"]
+                                                                  :optimizations :whitespace }
+                                                      }}}
+                             }
                        }
 
 
