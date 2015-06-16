@@ -33,9 +33,11 @@
 
             :profiles {:dev {
                              :source-paths ["env/dev/clj"]
+                             :test-paths ["test/cljs"]
                              :env          {:is-dev true}
-                             :plugins [[com.cemerick/clojurescript.test "0.3.1"]
+                             :plugins [[com.cemerick/clojurescript.test "0.3.3"]
                                        [lein-npm "0.4.0"]]
+                             :node-dependencies [[slimerjs "0.9.6"]]
                              :cljsbuild    {
                                             :test-commands {"unit-tests" ["node_modules/slimerjs/bin/slimerjs" :runner
                                                                           "resources/private/js/unit-test.js"
@@ -47,6 +49,7 @@
                                                      {
 
                                                        :source-paths ["src/cljs" "test/cljs"]
+                                                       :notify-command ["node_modules/slimerjs/bin/slimerjs" :cljs.test/runner "resources/private/js/unit-test.js"]
                                                        :compiler {:pretty-print true
                                                                   :output-dir "resources/private/js"
                                                                   :output-to "resources/private/js/unit-test.js"
