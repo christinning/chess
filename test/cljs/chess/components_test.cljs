@@ -5,7 +5,6 @@
   (:require [cemerick.cljs.test :as t]
             [dommy.core :as dommy]
             [chess.components :as c]
-            [chess.board :as board]
             [om.core :as om :include-macros true]))
 
 (defn new-node [id]
@@ -15,16 +14,22 @@
 (defn append-node [node]
   (dommy/append! (sel1 js/document :body) node))
 
-(defn container! []
-  (-> gensym
-      new-node
-      append-node))
+(defn container!
+  ([] (container! (gensym)))
+  ([id]
+    (-> id
+        new-node
+        append-node)
+    (. js/document getElementById id)))
 
-(comment (deftest initial-board
-                  (let [container (container!)]
-                    (om/root c/board {} {:target container})
-                    (is (= 1 2)))))
+(deftest test-container
+         (let [c (container! "container-1")]
+           (is (sel1 :#container-1))))
+
+(deftest test-square
+         (let [c (container!)]
+           (om/root c/square ["a4" :R false] {:target c})
+           (is (sel1 [:#a4 ".white.rook.piece"]))))
 
 
-(deftest fails
-         (is (= 1 3)))
+

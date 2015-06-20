@@ -37,6 +37,7 @@
                              :env               {:is-dev true}
                              :plugins           [[com.cemerick/clojurescript.test "0.3.3"]
                                                  [lein-npm "0.4.0"]]
+                             :dependencies      [[prismatic/dommy "1.1.0"]]
                              :node-dependencies [[slimerjs "0.9.2"]]
                              :cljsbuild         {
                                                  :test-commands {"unit-tests" ["node_modules/slimerjs/bin/slimerjs" :runner
