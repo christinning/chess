@@ -5,6 +5,7 @@
   (:require [cemerick.cljs.test :as t]
             [dommy.core :as dommy]
             [chess.components :as c]
+            [chess.board :as b]
             [om.core :as om :include-macros true]))
 
 (defn new-node [id]
@@ -29,7 +30,13 @@
 (deftest test-square
          (let [c (container!)]
            (om/root c/square ["a4" :R false] {:target c})
-           (is (sel1 [:#a4 ".white.rook.piece"]))))
+           (is (sel1 c [:#a4 ".white.rook.piece"]))))
+
+(comment "this fails in slimerjs due to core.async code in board component"
+         (deftest test-board
+                  (let [c (container!)]
+                    (om/root c/board {:board b/start-position} {:target c})
+                    (is (sel1 c [:#a1 ".white.rook.piece"])))))
 
 
 
