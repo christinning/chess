@@ -4,8 +4,8 @@
                    [dommy.core :refer [sel1]])
   (:require [cemerick.cljs.test :as t]
             [dommy.core :as dommy]
-            [chess.components :as c]
-            [chess.board :as b]
+            [chess.components :as components]
+            [chess.board :refer [start-position]]
             [om.core :as om :include-macros true]))
 
 (defn new-node [id]
@@ -29,12 +29,12 @@
 
 (deftest test-square
          (let [c (container!)]
-           (om/root c/square ["a4" :r true] {:target c})
+           (om/root components/square ["a4" :r true] {:target c})
            (is (sel1 c ["#a4.square.selected" ".piece.black.rook" ]))))
 
 (deftest test-board
          (let [c (container!)]
-           (om/root c/board {:board b/start-position} {:target c})
+           (om/root components/board {:board start-position} {:target c})
            (is (sel1 c [:#a1 ".piece.white.rook"]))))
 
 
