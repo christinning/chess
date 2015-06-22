@@ -5,6 +5,8 @@ A browser based chessboard. Currently very few features, hopefully more to come.
 ## Dev
 The aim of this project is to explore clojurescript, om and the supporting tools.
 
+Please install PhantomJS for testing: http://phantomjs.org/
+
 The project was initially created using the 
 [chestnut template](https://github.com/plexus/chestnut) but I have begun to move over to 
 a pure [figwheel](https://github.com/bhauman/lein-figwheel) solution for live 

@@ -29,14 +29,13 @@
 
 (deftest test-square
          (let [c (container!)]
-           (om/root c/square ["a4" :R false] {:target c})
-           (is (sel1 c [:#a4 ".white.rook.piece"]))))
+           (om/root c/square ["a4" :r true] {:target c})
+           (is (sel1 c ["#a4.square.selected" ".piece.black.rook" ]))))
 
-(comment "this fails in slimerjs due to core.async code in board component"
-         (deftest test-board
-                  (let [c (container!)]
-                    (om/root c/board {:board b/start-position} {:target c})
-                    (is (sel1 c [:#a1 ".white.rook.piece"])))))
+(deftest test-board
+         (let [c (container!)]
+           (om/root c/board {:board b/start-position} {:target c})
+           (is (sel1 c [:#a1 ".piece.white.rook"]))))
 
 
 

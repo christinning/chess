@@ -35,14 +35,12 @@
                              :source-paths      ["env/dev/clj"]
                              :test-paths        ["test/cljs"]
                              :env               {:is-dev true}
-                             :plugins           [[com.cemerick/clojurescript.test "0.3.3"]
-                                                 [lein-npm "0.4.0"]]
+                             :plugins           [[com.cemerick/clojurescript.test "0.3.3"]]
                              :dependencies      [[prismatic/dommy "1.1.0"]]
-                             :node-dependencies [[slimerjs "0.9.2"]]
                              :cljsbuild         {
-                                                 :test-commands {"unit-tests" ["node_modules/slimerjs/bin/slimerjs" :runner
-                                                                               "resources/private/js/unit-test.js"
-                                                                               ]}
+                                                 :test-commands {"phantom-test" ["phantomjs" :runner
+                                                                                 "phantom/bind-polyfill.js"
+                                                                                 "resources/private/js/unit-test.js"]}
                                                  :builds        {:app
                                                                  {:figwheel     true
                                                                   :source-paths ["env/dev/cljs"]}
@@ -50,7 +48,9 @@
                                                                  {
 
                                                                   :source-paths   ["src/cljs" "test/cljs"]
-                                                                  :notify-command ["node_modules/slimerjs/bin/slimerjs" :cljs.test/runner "resources/private/js/unit-test.js"]
+                                                                  :notify-command ["phantomjs" :cljs.test/runner
+                                                                                   "phantom/bind-polyfill.js"
+                                                                                   "resources/private/js/unit-test.js"]
                                                                   :compiler       {:pretty-print  true
                                                                                    :output-dir    "resources/private/js"
                                                                                    :output-to     "resources/private/js/unit-test.js"
