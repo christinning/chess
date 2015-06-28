@@ -14,3 +14,6 @@
      (append  (html [:script {:type "text/javascript"} "goog.require('chess.dev')"]))
      ))
 
+(defn cljs-repl []
+  (figwheel-sidecar.repl-api/cljs-repl))
+
