@@ -34,15 +34,21 @@
          (let [c (container! "container-1")]
            (is (sel1 :#container-1))))
 
-(deftest test-square
+(deftest test-square-black-piece
          (let [c (container!)]
            (om/root components/square ["a4" :r true] {:target c})
            (is (sel1 c ["#a4.square.selected" ".piece.black.rook"]))))
 
+(deftest test-square-white-piece
+         (let [c (container!)]
+           (om/root components/square ["a7" :P false] {:target c})
+           (is (sel1 c ["#a7.square" ".piece.white.pawn"]))))
+
 (deftest test-board
          (let [c (container!)]
            (om/root components/board {:board start-position} {:target c})
-           (is (sel1 c [:#a1 ".piece.white.rook"]))))
+           (is (sel1 c [:#a1 ".piece.white.rook"]))
+           (is (sel1 c [:#h8 ".piece.black.rook"]))))
 
 (deftest ^:async test-board-interaction
          (let [c (container!)]
@@ -52,6 +58,7 @@
            (js/setTimeout
              (fn []
                (is (sel1 c ["#d4" ".piece.white.pawn"]))
+               (is (not (sel1 c ["#d2" ".piece.white.pawn"])))
                (done))
              500)))
 
