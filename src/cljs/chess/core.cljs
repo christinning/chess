@@ -1,9 +1,9 @@
 (ns chess.core
   (:require [om.core :as om :include-macros true]
-            [chess.board :as board]
+            [chess.board :refer [start-position]]
             [chess.components :as components]))
 
-(defonce app-state (atom {:board board/start-position}))
+(defonce app-state (atom {:board start-position}))
 
 (defn main []
   (om/root
