@@ -33,7 +33,7 @@
     (display-name [_]
       "square")))
 
-(defn board [{:keys [board] :as app-state} owner]
+(defn board [{:keys [game] :as app-state} owner]
   (reify
     om/IInitState
     (init-state [_]
@@ -46,7 +46,7 @@
                  [r]
                  (apply dom/div #js {:className "row"}
                         (om/build-all square r {:opts {:click-chan click-chan}})))
-               (->> board
+               (->> game
                     squares-and-pieces
                     (map (fn [[s p]] [s p (= s selected)]))
                     as-rows))))
@@ -54,18 +54,16 @@
     (did-mount [_]
       (let [click-chan (om/get-state owner :click-chan)]
         (go-loop []
-          (let [new-selection (<! click-chan)
-                old-selection (om/get-state owner :selected)]
-            (if old-selection
-              (do
-                (om/transact! app-state :board (fn [b]
-                                                 (move b
-                                                         old-selection
-                                                         new-selection)))
-                (om/set-state! owner :selected nil))
-              (if (in (deref board) new-selection)
-                (om/set-state! owner :selected new-selection))))
-          (recur))))
+                 (let [new-selection (<! click-chan)
+                       old-selection (om/get-state owner :selected)]
+                   (if old-selection
+                     (do
+                       (om/transact! app-state :game (fn [b]
+                                            (move b old-selection new-selection)))
+                       (om/set-state! owner :selected nil))
+                     (if (in (deref game) new-selection)
+                       (om/set-state! owner :selected new-selection))))
+                 (recur))))
     om/IDisplayName
     (display-name [_]
       "board")))

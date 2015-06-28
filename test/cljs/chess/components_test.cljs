@@ -6,7 +6,7 @@
   (:require [cemerick.cljs.test :as t]
             [dommy.core :as dommy]
             [chess.components :as components]
-            [chess.board :refer [start-position]]
+            [chess.board :refer [new-game]]
             [om.core :as om :include-macros true]))
 
 (defn new-node [id]
@@ -46,13 +46,13 @@
 
 (deftest test-board
          (let [c (container!)]
-           (om/root components/board {:board start-position} {:target c})
+           (om/root components/board {:game new-game} {:target c})
            (is (sel1 c [:#a1 ".piece.white.rook"]))
            (is (sel1 c [:#h8 ".piece.black.rook"]))))
 
 (deftest ^:async test-board-interaction
          (let [c (container!)]
-           (om/root components/board {:board start-position} {:target c})
+           (om/root components/board {:game new-game} {:target c})
            (click-on! c "#d2")
            (click-on! c "#d4")
            (js/setTimeout

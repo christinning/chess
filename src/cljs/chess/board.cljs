@@ -105,7 +105,7 @@
   "Get board rows from top to bottom. Returns a seq of seqs
   each containing a vector of [square-name piece].
   Eg. [\"a2\" :p] or [\"a3\" nil]"
-  [board]
+  [{board :board}]
   (let [indexes (range edging (+ edging chessboard-side))]
     (for
       [y (reverse indexes)
@@ -115,7 +115,7 @@
 
 (defn in
   "Get the contents of a square on the board. Nil if empty"
-  [board sq]
+  [{board :board} sq]
   (board (fr->i sq)))
 
 (defn put
@@ -130,14 +130,15 @@
 
 (defn move
   "Moves a piece from one square to the other"
-  [board from-sq to-sq]
-  (if-let [p (in board from-sq)]
-    (-> board
-        (put from-sq empty-sq)
-        (put to-sq p))
-    board))
+  [{:keys [board moves] :as game} from-sq to-sq]
+   (if-let [p (in game from-sq)]
+              {:board (-> board
+                          (put from-sq empty-sq)
+                          (put to-sq p))
+               :moves (conj moves [from-sq to-sq])}
+              game))
 
-(def start-position
+(def new-game
   (let [a1 (fr->i "a1")
         a2 (fr->i "a2")
         fill-row (fn [sq pieces]
@@ -148,6 +149,7 @@
         lcase (fn [sym] (-> sym name lower-case keyword))
         black (reduce-kv (fn [m k v] (assoc m (mirror k) (lcase v))) {} white)]
 
-    (merge white black)))
+    {:board (merge white black)
+     :moves []}))
 
 
