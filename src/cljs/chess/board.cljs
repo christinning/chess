@@ -133,8 +133,8 @@
   [board from-sq to-sq]
   (if-let [p (in board from-sq)]
     (-> board
-        (put to-sq p)
-        (put from-sq empty-sq))
+        (put from-sq empty-sq)
+        (put to-sq p))
     board))
 
 (def start-position
