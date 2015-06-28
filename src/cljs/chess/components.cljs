@@ -33,7 +33,7 @@
     (display-name [_]
       "square")))
 
-(defn board [{:keys [game] :as app-state} owner]
+(defn board [{:keys [game hist] :as app-state} owner]
   (reify
     om/IInitState
     (init-state [_]
@@ -58,8 +58,10 @@
                        old-selection (om/get-state owner :selected)]
                    (if old-selection
                      (do
-                       (om/transact! app-state :game (fn [b]
-                                            (move b old-selection new-selection)))
+                       (om/transact! app-state
+                                     (fn [{:keys [game hist]}]
+                                       {:game (move game old-selection new-selection)
+                                        :hist (vec (conj (seq hist) game))}))
                        (om/set-state! owner :selected nil))
                      (if (in (deref game) new-selection)
                        (om/set-state! owner :selected new-selection))))
