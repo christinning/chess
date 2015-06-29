@@ -33,6 +33,8 @@
     (display-name [_]
       "square")))
 
+
+
 (defn board [{:keys [game hist] :as app-state} owner]
   (reify
     om/IInitState
@@ -53,10 +55,11 @@
     om/IDidMount
     (did-mount [_]
       (let [action-chan (om/get-state owner :action-chan)]
+        (.addEventListener js/window "keyup" #(put! action-chan {:type :keyup
+                                                                 :key (.-keyCode %)}))
         (go-loop []
                  (let [message (<! action-chan)
                        message-type (message :type)]
-                   (println message-type)
                    (condp = message-type
                      :click (let [new-selection (message :square)
                                   old-selection (om/get-state owner :selected)]
@@ -65,10 +68,20 @@
                                   (om/transact! app-state
                                                 (fn [{:keys [game hist]}]
                                                   {:game (move game old-selection new-selection)
-                                                   :hist (vec (conj (seq hist) game))}))
+                                                   :hist (vec (cons game hist))}))
                                   (om/set-state! owner :selected nil))
                                 (if (in (deref game) new-selection)
-                                  (om/set-state! owner :selected new-selection))))))
+                                  (om/set-state! owner :selected new-selection))))
+                     :keyup (if (= 90 (message :key))
+                              (do
+                                (om/transact! app-state
+                                              (fn [{hist :hist :as state}]
+                                                (if-not (empty? hist)
+                                                  {:game (first hist)
+                                                   :hist (rest hist)}
+                                                  state)))
+
+                                (om/set-state! owner :selected nil)))))
                  (recur))))
     om/IDisplayName
     (display-name [_]
