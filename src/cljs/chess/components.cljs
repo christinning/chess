@@ -3,12 +3,13 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [chess.board :refer [move as-rows in pieces colour squares-and-pieces]]
-            [cljs.core.async :refer [chan <! put!]]))
+            [cljs.core.async :refer [chan <! put!]]
+            [clojure.string :refer [join]]))
 
 
 (defn piece-class-name
   [p]
-  (str "piece " (colour p) " " (pieces p)))
+  (join " " ["piece" (-> p colour name) (pieces p)]))
 
 (defn piece [p owner]
   (reify

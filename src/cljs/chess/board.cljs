@@ -40,8 +40,8 @@
 
 (defn colour
   [p]
-  (cond (white? p) "white"
-        (black? p) "black"))
+  (cond (white? p) :white
+        (black? p) :black))
 
 (defn i->xy [i]
   (let [y (int (/ i world-side))
