@@ -2,34 +2,35 @@
   (:require-macros [cljs.core.async.macros :refer [go-loop]])
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [chess.board :refer [move as-rows in pieces colour squares-and-pieces]]
+            [chess.board :refer [move can-move? as-rows in pieces colour squares-and-pieces]]
             [cljs.core.async :refer [chan <! put!]]
             [clojure.string :refer [join]]))
 
 
 (defn piece-class-name
-  [p]
-  (join " " ["piece" (-> p colour name) (pieces p)]))
+  [p movable]
+  (join " " ["piece" (-> p colour name) (pieces p)  (if movable "movable")]))
 
-(defn piece [p owner]
+(defn piece [[p movable] owner]
   (reify
     om/IRender
     (render [_]
-      (dom/div #js {:className (piece-class-name p)} nil))
+      (dom/div #js {:className (piece-class-name p movable)} nil))
     om/IDisplayName
     (display-name [_]
       "piece")))
 
-(defn square [[id p selected] owner {:keys [action-chan]}]
+(defn square [[id p selected movable] owner {:keys [action-chan]}]
   (reify
     om/IRender
     (render [_]
       (dom/div
-       #js {:className (str "square" (if selected " selected"))
+       #js {:className (join " " ["square"
+                                  (if selected "selected")])
             :id        id
             :onClick   #(put! action-chan {:type :click :square id})}
        (if p
-         (om/build piece p))))
+         (om/build piece [p movable]))))
     om/IDisplayName
     (display-name [_]
       "square")))
@@ -52,6 +53,7 @@
                (->> game
                     squares-and-pieces
                     (map (fn [[s p]] [s p (= s selected)]))
+                    (map (fn [[s _ _ :as p]] (conj p (can-move? game s))))
                     as-rows))))
     om/IDidMount
     (did-mount [_]
@@ -71,7 +73,7 @@
                                                   {:game (move game old-selection new-selection)
                                                    :hist (vec (cons game hist))}))
                                   (om/set-state! owner :selected nil))
-                                (if (in (deref game) new-selection)
+                                (if (can-move? (deref game) new-selection)
                                   (om/set-state! owner :selected new-selection))))
                      :keyup (if (= 90 (message :key))
                               (do

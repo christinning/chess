@@ -48,6 +48,10 @@ keyframes example{
     width: 100%;    
 }
 
+.piece.movable{
+    cursor: pointer;
+}
+
 
 .white.king{
     background-position: 0px 0px;
