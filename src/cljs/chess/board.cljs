@@ -138,6 +138,16 @@
                :moves (conj moves [from-sq to-sq])}
               game))
 
+(defn can-move?
+  [{:keys [board moves]} fr]
+  (if-let [p (board (fr->i fr))]
+    (let [turn-colour (if (even? (count moves))
+                       :white
+                       :black)
+          piece-colour (colour p)]
+      (= turn-colour piece-colour))
+    false))
+
 (def new-game
   (let [a1 (fr->i "a1")
         a2 (fr->i "a2")
